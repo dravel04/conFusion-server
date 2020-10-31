@@ -33,7 +33,7 @@ router.post('/login', (req, res, next) => {
     var authHeader = req.headers.authorization;
     
     if (!authHeader) {
-      var err = new Error('You are not authenticated!');
+      var err = new Error('You are not authenticated!');      
       res.setHeader('WWW-Authenticate', 'Basic');
       err.status = 401;
       return next(err);
@@ -59,7 +59,7 @@ router.post('/login', (req, res, next) => {
         req.session.user = 'authenticated';
         res.statusCode = 200;
         res.setHeader('Content-Type', 'text/plain');
-        res.end('You are authenticated!')
+        res.end('Welcome '+user.username+' !');
       }
     })
     .catch((err) => next(err));
