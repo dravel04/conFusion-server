@@ -20,7 +20,7 @@ dishRouter.route('/')
             }, (err) => next(err))
             .catch((err) => next(err));
     })
-    .post(authenticate.verifyUser, (req, res, next) => {   // only authenticate user can do it 
+    .post(authenticate.verifyUser, authenticate.verifyAdmin, (req, res, next) => {   // only authenticate admin can do it 
         Dishes.create(req.body)
             .then((dish) => {
                 console.log('Dish Created ', dish);
@@ -30,12 +30,12 @@ dishRouter.route('/')
             }, (err) => next(err))
             .catch((err) => next(err));
     })
-    .put(authenticate.verifyUser, (req, res, next) => {   // only authenticate user can do it
-        res.statusCode = 403;
-        res.setHeader('Content-Type', 'text/plain');
-        res.end('PUT operation not supported on /dishes');
+    .put(authenticate.verifyUser, authenticate.verifyAdmin, (req, res, next) => {   // only authenticate admin can do it
+            res.statusCode = 403;
+            res.setHeader('Content-Type', 'text/plain');
+            res.end('PUT operation not supported on /dishes')        
     })
-    .delete(authenticate.verifyUser, (req, res, next) => {   // only authenticate user can do it
+    .delete(authenticate.verifyUser, authenticate.verifyAdmin, (req, res, next) => {   // only authenticate user can do it
         Dishes.deleteMany({})
             .then((resp) => {
                 res.statusCode = 200;
@@ -56,12 +56,12 @@ dishRouter.route('/:dishId')
             }, (err) => next(err))
             .catch((err) => next(err));
     })
-    .post(authenticate.verifyUser, (req, res, next) => {   // only authenticate user can do it
+    .post(authenticate.verifyUser, authenticate.verifyAdmin, (req, res, next) => {   // only authenticate admin can do it
         res.statusCode = 403;
         res.setHeader('Content-Type', 'text/plain');
         res.end('POST operation not supported on /dishes/' + req.params.dishId);
     })
-    .put(authenticate.verifyUser, (req, res, next) => {   // only authenticate user can do it
+    .put(authenticate.verifyUser, authenticate.verifyAdmin, (req, res, next) => {   // only authenticate admin can do it
         Dishes.findByIdAndUpdate(req.params.dishId, {
             $set: req.body
         }, { new: true })
@@ -72,7 +72,7 @@ dishRouter.route('/:dishId')
             }, (err) => next(err))
             .catch((err) => next(err));
     })
-    .delete(authenticate.verifyUser, (req, res, next) => {   // only authenticate user can do it
+    .delete(authenticate.verifyUser, authenticate.verifyAdmin, (req, res, next) => {   // only authenticate user can do it
         Dishes.findByIdAndRemove(req.params.dishId)
             .then((resp) => {
                 res.statusCode = 200;

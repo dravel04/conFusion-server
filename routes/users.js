@@ -8,7 +8,6 @@ var authenticate = require('../authenticate');
 router.use(bodyParser.json());
 
 router.post('/signup', (req, res) => {
-  console.log("hola");
   User.register(new User({ username: req.body.username }),
     req.body.password, (err, user) => {
       if (err) {
