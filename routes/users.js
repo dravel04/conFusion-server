@@ -3,6 +3,7 @@ var passport = require('passport');
 var router = express.Router();
 const bodyParser = require('body-parser');
 var User = require('../models/user');
+var authenticate = require('../authenticate');
 
 router.use(bodyParser.json());
 
@@ -27,8 +28,9 @@ router.post('/signup', (req, res) => {
 
 router.post('/login', passport.authenticate('local'), (req, res) => { // If can't call passport.authenticate('local')
   res.statusCode = 200;                                               // send a error to client and abort login       
+  var token = authenticate.getToken({_id: req.user._id}); // when login 1st time correctly, create the token
   res.setHeader('Content-Type', 'application/json');
-  res.json({ success: true, status: 'You are successfully logged in!' });
+  res.json({success: true, token: token, status: 'You are successfully logged in!'}); //and send back inside request
 });
 
 /* GET users listing. */

@@ -12,11 +12,11 @@ var usersRouter = require('./routes/users');
 var dishRouter = require('./routes/dishRouter');
 var promoRouter = require('./routes/promoRouter');
 var leaderRouter = require('./routes/leaderRouter');
-var authenticate = require('./authenticate');
+var config = require('./config.js');
 
 const mongoose = require('mongoose');
 
-const url = 'mongodb://localhost:27017/conFusion';
+const url = config.mongoUrl;
 const connect = mongoose.connect(url, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
@@ -38,33 +38,34 @@ app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 // app.use(cookieParser('12345-67890-09876-54321'));
-app.use(session({
-  name: 'session-id',
-  secret: '12345-67890-09876-54321',
-  saveUninitialized: false,
-  resave: false,
-  store: new FileStore()
-}));
+// app.use(session({
+//   name: 'session-id',  
+//   saveUninitialized: false,
+//   resave: false,
+//   store: new FileStore()
+// }));
 
 app.use(passport.initialize());
-app.use(passport.session());
+// app.use(passport.session());
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 
-function auth(req, res, next) {
-  if (!req.user) {    // req.user will be loaded in the passport session middleware automatically
-    var err = new Error('You are not authenticated!');
-    err.status = 403;
-    return next(err);
-  } 
-  else {
-    next();
-  }
-}
-app.use(auth);
+// Dont need authentication on every request only on certain routes
+// ---------------------------------------------------
+// function auth(req, res, next) {
+//   if (!req.user) {    // req.user will be loaded in the passport session middleware automatically
+//     var err = new Error('You are not authenticated!');
+//     err.status = 403;
+//     return next(err);
+//   } 
+//   else {
+//     next();
+//   }
+// }
+// app.use(auth);
 
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, 'public'))); // Leave public folder for anybody to access
 
 app.use('/dishes', dishRouter);
 app.use('/promotions', promoRouter);
