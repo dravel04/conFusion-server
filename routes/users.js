@@ -2,13 +2,14 @@ var express = require('express');
 var passport = require('passport');
 var router = express.Router();
 const bodyParser = require('body-parser');
+const cors = require('./cors');
 
 var User = require('../models/user');
 var authenticate = require('../authenticate');
 
 router.use(bodyParser.json());
 
-router.post('/signup', (req, res) => {
+router.post('/signup', cors.corsWithOptions, (req, res) => {
   User.register(new User({ username: req.body.username }),
     req.body.password, (err, user) => {
       if (err) {
@@ -39,7 +40,7 @@ router.post('/signup', (req, res) => {
     });
 });
 
-router.post('/login', passport.authenticate('local'), (req, res) => { // If can't call passport.authenticate('local')
+router.post('/login', cors.corsWithOptions, passport.authenticate('local'), (req, res) => { // If can't call passport.authenticate('local')
   res.statusCode = 200;                                               // send a error to client and abort login       
   var token = authenticate.getToken({ _id: req.user._id }); // when login 1st time correctly, create the token
   res.setHeader('Content-Type', 'application/json');
@@ -47,7 +48,7 @@ router.post('/login', passport.authenticate('local'), (req, res) => { // If can'
 });
 
 /* GET users listing. */
-router.get('/', authenticate.verifyUser, authenticate.verifyAdmin, function (req, res, next) {
+router.get('/', cors.corsWithOptions, authenticate.verifyUser, authenticate.verifyAdmin, function (req, res, next) {
   User.find({})
     .then((users) => {
       res.statusCode = 200;
@@ -57,7 +58,7 @@ router.get('/', authenticate.verifyUser, authenticate.verifyAdmin, function (req
     .catch((err) => next(err));
 });
 
-router.get('/logout', (req, res) => {
+router.get('/logout', cors.corsWithOptions, (req, res) => {
   req.logout();
   res.redirect('/');
 });
