@@ -38,7 +38,6 @@ dishRouter.route('/')
         res.end('PUT operation not supported on /dishes')
     })
     .delete(cors.corsWithOptions, authenticate.verifyUser, authenticate.verifyAdmin, (req, res, next) => {   // only authenticate user can do it
-        console.log(cors.corsWithOptions);
         Dishes.deleteMany({})
             .then((resp) => {
                 res.statusCode = 200;

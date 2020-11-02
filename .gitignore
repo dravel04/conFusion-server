@@ -1,2 +1,6 @@
 # dependencies
 node_modules
+
+# SSL
+bin/certificate.net
+bin/private.key

@@ -16,6 +16,7 @@ const dishRouter = require('./routes/dishRouter');
 const promoRouter = require('./routes/promoRouter');
 const leaderRouter = require('./routes/leaderRouter');
 const uploadRouter = require('./routes/uploadRouter');
+const favRouter = require('./routes/favRouter');
 
 const url = config.mongoUrl;
 const connect = mongoose.connect(url, {
@@ -82,6 +83,7 @@ app.use('/dishes', dishRouter);
 app.use('/promotions', promoRouter);
 app.use('/leaders', leaderRouter);
 app.use('/imageUpload', uploadRouter);
+app.use('/favorites', favRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
