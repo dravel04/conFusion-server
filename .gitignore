@@ -2,5 +2,5 @@
 node_modules
 
 # SSL
-bin/certificate.net
+bin/certificate.cert
 bin/private.key
